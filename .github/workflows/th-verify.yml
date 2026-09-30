@@ -1,0 +1,59 @@
+# th-verify.yml — terminalhire patch verification (TERM-211)
+#
+# GENERATED, AND RE-GENERATED PER CLAIM. Edits here are overwritten. This file is
+# committed to the th/claim-* branch by terminalhire, never to your default branch.
+#
+# A developer working through terminalhire never holds a checkout of this
+# repository. The platform applies their patch to a th/claim-* branch, this
+# workflow runs, and only the RESULT travels back: conclusion, failing job names,
+# a bounded log tail, and a preview URL when one exists.
+#
+# WHAT A PASS MEANS HERE: this repository declares a test script, so the job
+# installs and runs it. A green result is a test result.
+#
+# READ THIS BEFORE ADDING ANYTHING TO IT. The code this workflow runs was written
+# by someone outside your organisation. Every line below is shaped by that:
+#
+#   permissions: contents: read
+#     The job token can read the repository and nothing else. No package write,
+#     no deployment write, no ability to open or approve anything.
+#
+#   persist-credentials: false
+#     Without it, actions/checkout leaves the job token in .git/config, where any
+#     later step — including one a dependency's install script starts — can read
+#     it straight off disk.
+#
+#   nothing from the repository secret store
+#     A workflow sees a stored credential only when the YAML maps it in. This file
+#     maps none, which is what makes running an untrusted patch here safe. Adding
+#     one hands it to code you have not read. If a test genuinely needs a
+#     credential, give it a throwaway one scoped to nothing you care about.
+#
+# The trade you are making: a run with no credential is not production, so a class
+# of bug will not reproduce here. That is the intended shape — the developer
+# iterates on what CI can decide, and you keep the rest.
+
+name: th-verify
+
+on:
+  push:
+    branches:
+      - 'th/claim-**'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: npm ci
+      - run: npm test
