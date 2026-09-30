@@ -1,11 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { greeting, page } from '../server.js';
+import { page } from '../server.js';
 
-test('greeting spells hello', () => {
-  assert.equal(greeting('terminalhire'), 'Hello, terminalhire');
+test('the page greets with hello', () => {
+  assert.match(page(), /<h1>Hello, terminalhire<\/h1>/);
 });
 
-test('the page shows the greeting', () => {
-  assert.match(page(), /<h1>Hello, terminalhire<\/h1>/);
+test('the page keeps its description', () => {
+  assert.match(page(), /A one-page app for screenshot runs\./);
 });

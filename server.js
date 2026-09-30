@@ -1,19 +1,9 @@
 import { createServer } from 'node:http';
+import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-export function greeting(name) {
-  return `Helo, ${name}`;
-}
-
 export function page() {
-  return `<!doctype html>
-<html>
-  <head><meta charset="utf-8"><title>th-shot-app</title></head>
-  <body style="font-family: sans-serif; padding: 2rem">
-    <h1>${greeting('terminalhire')}</h1>
-    <p>A one-page app for screenshot runs.</p>
-  </body>
-</html>`;
+  return readFileSync(new URL('./public/index.html', import.meta.url), 'utf8');
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
