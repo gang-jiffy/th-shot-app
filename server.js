@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
 
 export function greeting(name) {
-  return `Helo, ${name}`;
+  return `Hello, ${name}`;
 }
 
 export function page() {
